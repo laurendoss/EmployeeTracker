@@ -48,17 +48,45 @@ var connection = mysql.createConnection({
             choices: [
                 "View All Employees",
                 "View All Employees By Department",
-                "View All Employees By Management",
                 "Add Employee",
                 "Remove Employee",
                 "Update Employee Role",
-                "Update Employee Manager"
+                
             ]
         }
-      ]).then(function(data){
-          console.log(data)
+      ]).then(function(answers){
+          
+          if (answers.Action === "View All Employees"){
+              ViewAllEmployees(); 
+
+          } else if (answers.Action === "View All Employees by Department"){
+              ViewByDepartment(); 
+
+          }  else if (answers.Action === "Add Employee"){
+              AddEmployee(); 
+
+          } else if (answers.Action === "Remove Employee"){
+              RemoveEmployee(); 
+
+          } else if (answers.Action === "Update Employee Role"){
+              UpdateEmployeeRole(); 
+
+          }
           //We now have the user's action choice. 
           //Based on that choice, present them with new Questions
       })
   }
   promptUser()
+
+  function ViewAllEmployees() {
+    var query = "SELECT first_name, last_name, title, salary, department FROM employee RIGHT JOIN role on employee.role_id = role.id JOIN departments on role.department_id = departments.id";
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+    
+        console.table(res); 
+    
+      
+    });
+  }
+
+  

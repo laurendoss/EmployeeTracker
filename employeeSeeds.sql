@@ -2,9 +2,9 @@ DROP DATABASE IF EXISTS employee_db;
 CREATE DATABASE employee_db; 
 USE employee_db; 
 
-CREATE TABLE department(
+CREATE TABLE departments(
 id INT AUTO_INCREMENT NOT NULL, 
-name VARCHAR(30) NOT NULL, 
+department VARCHAR(30) NOT NULL, 
 PRIMARY KEY(id)
 ); 
 
@@ -35,10 +35,10 @@ INSERT INTO employee (first_name, last_name, role_id) VALUES ('Jean-Ralphio', 'S
 
 
 
-INSERT INTO department (name) VALUES ('Legal'); 
-INSERT INTO department (name) VALUES ('Finance'); 
-INSERT INTO department (name) VALUES ('Engineering'); 
-INSERT INTO department (name) VALUES ('Sales');
+INSERT INTO departments (department) VALUES ('Legal'); 
+INSERT INTO departments (department) VALUES ('Finance'); 
+INSERT INTO departments (department) VALUES ('Engineering'); 
+INSERT INTO departments (department) VALUES ('Sales');
 
 INSERT INTO role (title, salary, department_id) VALUES ('Lawyer', '200000', '1'); 
 INSERT INTO role (title, salary, department_id) VALUES ('Lawyer', '200000', '1'); 
@@ -47,3 +47,8 @@ INSERT INTO role (title, salary, department_id) VALUES ('Accountant', '150000', 
 INSERT INTO role (title, salary, department_id) VALUES ('Sales Lead', '150000', '4');
 INSERT INTO role (title, salary, department_id) VALUES ('Software Engineer', '220000', '3');
 INSERT INTO role (title, salary, department_id) VALUES ('Salesperson', '120000', '4');
+
+-- // Selects all employees: 
+SELECT first_name, last_name, title, salary, department FROM employee
+RIGHT JOIN role on employee.role_id = role.id
+JOIN departments on role.department_id = departments.id
