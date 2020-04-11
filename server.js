@@ -76,17 +76,38 @@ var connection = mysql.createConnection({
           //Based on that choice, present them with new Questions
       })
   }
-  promptUser()
+  promptUser(); 
 
   function ViewAllEmployees() {
     var query = "SELECT first_name, last_name, title, salary, department FROM employee RIGHT JOIN role on employee.role_id = role.id JOIN departments on role.department_id = departments.id";
     connection.query(query, function(err, res) {
       if (err) throw err;
-    
         console.table(res); 
-    
-      
     });
+    OtherAction(); 
+    
+  }
+
+  function OtherAction(){
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "Action",
+            message: "Would you like to perform another action?",
+            choices: [
+                "Yes",
+                "No",
+                
+            ]
+        }
+      ]).then(answers => {
+          if (answers.Action === "Yes"){
+            promptUser(); 
+          } else if (answers.Action === "No"){
+            connection.end();
+          }
+
+      })
   }
 
   
