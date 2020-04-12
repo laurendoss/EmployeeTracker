@@ -96,25 +96,9 @@ function AddEmployee() {
 
   }
   ]).then(answers => {
-    let role_id = answers.id;
    
-    if (answers.EmployeeFirstName == answers.EmployeeFirstName || answers.EmployeeLastName == answers.EmployeeLastName || role_id == role_id) {
-      connection.query(
-        query = "INSERT INTO employee SET ?",
-        {
-          first_name: answers.EmployeeFirstName,
-          last_name: answers.EmployeeLastName,
-          role_id: role_id
-          
-
-        }, function (err) {
-          if (err) throw err;
-          console.log("Your employee was successfully added to list!");
-          // re-prompt the user for if they want to bid or post
-
-        }
-      )
-    } if (answers.EmployeeTitle === answers.EmployeeTitle || answers.EmployeeSalary === answers.EmployeeSalary) {
+   
+  if (answers.EmployeeTitle === answers.EmployeeTitle || answers.EmployeeSalary === answers.EmployeeSalary) {
       connection.query(
         query = "INSERT INTO role SET ?",
         {
@@ -126,11 +110,36 @@ function AddEmployee() {
           if (err) throw err;
           console.log("Your role was successfully added to list!");
           // re-prompt the user for if they want to bid or post
-
+          
         }
       )
 
-    } if (answers.EmployeeDepartment === answers.EmployeeDepartment) {
+    }   if (answers.EmployeeFirstName == answers.EmployeeFirstName || answers.EmployeeLastName == answers.EmployeeLastName) {
+      
+      var sql = `INSERT INTO employee (first_name, last_name) VALUES ('${answers.EmployeeFirstName}', '${answers.EmployeeLastName}')`
+      connection.query(sql, function(err, res){
+       
+        if (err) throw err; 
+      }); 
+      // connection.query(
+
+      //   var sql = `INSERT INTO employee (first_name, last_name) VALUES ('${answers.EmployeeFirstName}', '${answers.EmployeeLastName}')`
+      //   query = "INSERT INTO employee SET ?",
+      //   {
+      //     first_name: answers.EmployeeFirstName,
+      //     last_name: answers.EmployeeLastName,
+      //     // role_id: role_id
+          
+
+      //   }, function (err) {
+      //     if (err) throw err;
+      //     console.log("Your employee was successfully added to list!");
+      //     // re-prompt the user for if they want to bid or post
+
+      //   }
+      // )
+    } 
+     if (answers.EmployeeDepartment === answers.EmployeeDepartment) {
       connection.query(
         query = "INSERT INTO departments SET ?",
         {
@@ -138,9 +147,16 @@ function AddEmployee() {
 
         }, function (err) {
           if (err) throw err;
-          console.log("Your role was successfully added to list!");
+          console.log("Your department was successfully added to list!");
           // re-prompt the user for if they want to bid or post
+        
+         connection.query(
+          query = "UPDATE employee SET role_id = id WHERE role_id IS NULL AND id is NOT NULL;", function(err,res){
+            if (err) throw err; 
+            OtherAction();
+          }
 
+         )
         }
       )
 
