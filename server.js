@@ -23,6 +23,7 @@ function ViewAllEmployees() {
   connection.query(query, function (err, res) {
     if (err) throw err;
     console.table(res);
+    
     OtherAction();
   });
 
@@ -61,9 +62,10 @@ function ViewByDepartment() {
 function AddEmployee() {
   inquirer.prompt([
     {
-      type: "input",
+      type: "list",
       name: "EmployeeFirstName",
       message: "What is the Employee's First Name?",
+     
 
     },
     {
@@ -90,56 +92,41 @@ function AddEmployee() {
       message: "What is the Employee's Department?",
 
     },
-    {type: "input",
-    name: "EmployeeDepartmentCode",
-    message: "What is the Employee's Department Code?(1-Legal,2-Finance,3-Engineering,4-Sales)",
+    {
+      type: "input",
+      name: "EmployeeDepartmentCode",
+      message: "What is the Employee's Department Code?(1-Legal,2-Finance,3-Engineering,4-Sales)",
 
-  }
+    }
   ]).then(answers => {
-   
-   
-  if (answers.EmployeeTitle === answers.EmployeeTitle || answers.EmployeeSalary === answers.EmployeeSalary) {
+
+
+    if (answers.EmployeeTitle === answers.EmployeeTitle || answers.EmployeeSalary === answers.EmployeeSalary) {
       connection.query(
         query = "INSERT INTO role SET ?",
         {
           title: answers.EmployeeTitle,
           salary: answers.EmployeeSalary,
-          department_id: answers.EmployeeDepartmentCode, 
+          department_id: answers.EmployeeDepartmentCode,
 
         }, function (err) {
           if (err) throw err;
           console.log("Your role was successfully added to list!");
           // re-prompt the user for if they want to bid or post
-          
+
         }
       )
 
-    }   if (answers.EmployeeFirstName == answers.EmployeeFirstName || answers.EmployeeLastName == answers.EmployeeLastName) {
-      
+    } if (answers.EmployeeFirstName == answers.EmployeeFirstName || answers.EmployeeLastName == answers.EmployeeLastName) {
+
       var sql = `INSERT INTO employee (first_name, last_name) VALUES ('${answers.EmployeeFirstName}', '${answers.EmployeeLastName}')`
-      connection.query(sql, function(err, res){
-       
-        if (err) throw err; 
-      }); 
-      // connection.query(
+      connection.query(sql, function (err, res) {
 
-      //   var sql = `INSERT INTO employee (first_name, last_name) VALUES ('${answers.EmployeeFirstName}', '${answers.EmployeeLastName}')`
-      //   query = "INSERT INTO employee SET ?",
-      //   {
-      //     first_name: answers.EmployeeFirstName,
-      //     last_name: answers.EmployeeLastName,
-      //     // role_id: role_id
-          
+        if (err) throw err;
+      });
 
-      //   }, function (err) {
-      //     if (err) throw err;
-      //     console.log("Your employee was successfully added to list!");
-      //     // re-prompt the user for if they want to bid or post
-
-      //   }
-      // )
-    } 
-     if (answers.EmployeeDepartment === answers.EmployeeDepartment) {
+    }
+    if (answers.EmployeeDepartment === answers.EmployeeDepartment) {
       connection.query(
         query = "INSERT INTO departments SET ?",
         {
@@ -148,46 +135,79 @@ function AddEmployee() {
         }, function (err) {
           if (err) throw err;
           console.log("Your department was successfully added to list!");
-          // re-prompt the user for if they want to bid or post
-        
-         connection.query(
-          query = "UPDATE employee SET role_id = id WHERE role_id IS NULL AND id is NOT NULL;", function(err,res){
-            if (err) throw err; 
-            OtherAction();
-          }
 
-         )
+
+          connection.query(
+            query = "UPDATE employee SET role_id = id WHERE role_id IS NULL AND id is NOT NULL;", function (err, res) {
+              if (err) throw err;
+              OtherAction();
+            }
+
+          )
         }
       )
 
     }
-  })};
+  })
+};
 
 
-  //Function to prompt user with the opportunity to perform another action
-  function OtherAction() {
-    inquirer.prompt([
-      {
-        type: "list",
-        name: "Action",
-        message: "Would you like to perform another action?",
-        choices: [
-          "Yes",
-          "No",
+//Function to prompt user with the opportunity to perform another action
+function OtherAction() {
+  inquirer.prompt([
+    {
+      type: "list",
+      name: "Action",
+      message: "Would you like to perform another action?",
+      choices: [
+        "Yes",
+        "No",
 
-        ]
-      }
-    ]).then(answers => {
-      if (answers.Action === "Yes") {
-        promptUser();
-      } else if (answers.Action === "No") {
-        connection.end();
-      }
+      ]
+    }
+  ]).then(answers => {
+    if (answers.Action === "Yes") {
+      promptUser();
+    } else if (answers.Action === "No") {
+      connection.end();
+    }
 
-    })
-  }
-  function promptUser() {
-    console.log(`
+  })
+}
+// Function to update Employee Role
+function UpdateEmployeeRole(){
+  var arr = []; 
+  var sql = "SELECT * FROM employee"
+  connection.query(sql, function(err,res){
+    if (err) throw err; 
+    arr.push(res)
+    
+  })
+  console.log(arr)
+  // inquirer.prompt([
+  //   {
+  //     type: "input", 
+  //     name: "UpdateRoleFN", 
+  //     message: "What is the First Name of the Employee Who's Role You Would Like to Modify?"
+
+  //   }, 
+  //   {
+  //     type: "input", 
+  //     name: "UpdateRoleLN",
+  //     message: "What is the Last Name of the Employee Who's Role You Would Like to Modify?"
+  //   },
+  //   {
+  //     type: "input", 
+  //     name: "NewRole", 
+  //     message: "What would you like their new role to be?"
+  //   }
+  // ]).then(answers => {
+
+  // })
+
+}
+function promptUser() {
+  console.log(`
     ╔═══╗─────╔╗
     ║╔══╝─────║║
     ║╚══╦╗╔╦══╣║╔══╦╗─╔╦══╦══╗
@@ -208,40 +228,36 @@ function AddEmployee() {
 
 
 
-    inquirer.prompt([
-      {
-        type: "list",
-        name: "Action",
-        message: "What would you like to do?",
-        choices: [
-          "View All Employees",
-          "View All Employees By Department",
-          "Add Employee",
-          "Remove Employee",
-          "Update Employee Role",
+  inquirer.prompt([
+    {
+      type: "list",
+      name: "Action",
+      message: "What would you like to do?",
+      choices: [
+        "View All Employees",
+        "View All Employees By Department",
+        "Add Employee",
+        "Update Employee Role",
 
-        ]
-      }
-    ]).then(function (answers) {
+      ]
+    }
+  ]).then(function (answers) {
 
-      if (answers.Action === "View All Employees") {
-        ViewAllEmployees();
+    if (answers.Action === "View All Employees") {
+      ViewAllEmployees();
 
-      } else if (answers.Action === "View All Employees By Department") {
-        ViewByDepartment();
+    } else if (answers.Action === "View All Employees By Department") {
+      ViewByDepartment();
 
-      } else if (answers.Action === "Add Employee") {
-        AddEmployee();
+    } else if (answers.Action === "Add Employee") {
+      AddEmployee();
 
-      } else if (answers.Action === "Remove Employee") {
-        RemoveEmployee();
+    } else if (answers.Action === "Update Employee Role") {
+      UpdateEmployeeRole();
 
-      } else if (answers.Action === "Update Employee Role") {
-        UpdateEmployeeRole();
-
-      }
-      //We now have the user's action choice. 
-      //Based on that choice, present them with new Questions
-    })
-  }
-  promptUser();
+    }
+    //We now have the user's action choice. 
+    //Based on that choice, present them with new Questions
+  })
+}
+promptUser();
