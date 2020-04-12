@@ -52,3 +52,8 @@ INSERT INTO role (title, salary, department_id) VALUES ('Salesperson', '120000',
 SELECT first_name, last_name, title, salary, department FROM employee
 RIGHT JOIN role on employee.role_id = role.id
 JOIN departments on role.department_id = departments.id
+
+-- // Selects all employees from a department: 
+SELECT first_name, last_name, title, salary, department FROM employee
+RIGHT JOIN role on employee.role_id = role.id
+JOIN departments on role.department_id = departments.id WHERE department = "Finance"
