@@ -22,8 +22,9 @@ function ViewAllEmployees() {
   var query = "SELECT first_name, last_name, title, salary, department FROM employee RIGHT JOIN role on employee.role_id = role.id JOIN departments on role.department_id = departments.id";
   connection.query(query, function (err, res) {
     if (err) throw err;
+    console.log(res[0])
     console.table(res);
-    
+
     OtherAction();
   });
 
@@ -65,7 +66,7 @@ function AddEmployee() {
       type: "list",
       name: "EmployeeFirstName",
       message: "What is the Employee's First Name?",
-     
+
 
     },
     {
@@ -175,37 +176,56 @@ function OtherAction() {
   })
 }
 // Function to update Employee Role
-function UpdateEmployeeRole(){
-  var arr = []; 
-  var sql = "SELECT * FROM employee"
-  connection.query(sql, function(err,res){
-    if (err) throw err; 
-    arr.push(res)
-    
+function UpdateEmployeeRole() {
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "UpdateRoleFN",
+      message: "What is the First Name of the Employee Who's Role You Would Like to Modify?"
+
+    },
+    {
+      type: "input",
+      name: "UpdateRoleLN",
+      message: "What is the Last Name of the Employee Who's Role You Would Like to Modify?"
+    },
+    {
+      type: "list",
+      name: "NewRole",
+      message: "What would you like their new role to be?",
+      choices: ["Lead_Engineer","Software_Engineer","Lawyer","Accountant","Sales_Lead","Salesperson"]
+    }
+  ]).then(answers => {
+    const roleLookUp = {
+      Lead_Engineer: 3,
+      Software_Engineer: 6,
+      Lawyer: 1,
+      Accountant: 4, 
+      Sales_Lead: 5,
+      Salesperson:7
+    }
+
+    console.log(answers)
+
+    var sql = `UPDATE employee SET first_name = '${answers.UpdateRoleFN}', last_name= '${answers.UpdateRoleLN}', role_id = '${roleLookUp[answers.NewRole]}' WHERE first_name = '${answers.UpdateRoleFN}'`
+    connection.query(sql, function (err, res) {
+      if (err) throw err;
+      console.log(res)
+      OtherAction();
+
+    })
+      
+     
+      
   })
-  console.log(arr)
-  // inquirer.prompt([
-  //   {
-  //     type: "input", 
-  //     name: "UpdateRoleFN", 
-  //     message: "What is the First Name of the Employee Who's Role You Would Like to Modify?"
+  }
 
-  //   }, 
-  //   {
-  //     type: "input", 
-  //     name: "UpdateRoleLN",
-  //     message: "What is the Last Name of the Employee Who's Role You Would Like to Modify?"
-  //   },
-  //   {
-  //     type: "input", 
-  //     name: "NewRole", 
-  //     message: "What would you like their new role to be?"
-  //   }
-  // ]).then(answers => {
 
-  // })
 
-}
+
+
+
+
 function promptUser() {
   console.log(`
     ╔═══╗─────╔╗
